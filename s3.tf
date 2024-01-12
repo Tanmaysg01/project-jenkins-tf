@@ -8,5 +8,5 @@ resource "aws_s3_bucket_notification" "s3_bucket_eventbridge" {
 }
 
 resource "aws_s3_bucket" "webhook" {
-  bucket = "webhook-bucket"
+  bucket = "webhook-bucket-jenkins-project"
 }
