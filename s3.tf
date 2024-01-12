@@ -12,8 +12,8 @@ resource "aws_s3_bucket" "webhook" {
 }
 
 resource "aws_s3_bucket_object" "object" {
-  bucket = "projectbucket001"
-  key    = "new_object_key"
+  bucket = "event-pipeline-trigger-bucket"
+  key    = "Book1.csv"
   acl    = "private"
-  source = "C:/Users/Tanmay Garge/Desktop/New folder (2)/file.txt"
+  source = "https://event-pipeline-trigger-bucket.s3.amazonaws.com/Book1.csv"
 }
