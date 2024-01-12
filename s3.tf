@@ -12,7 +12,8 @@ resource "aws_s3_bucket" "webhook" {
 }
 
 resource "aws_s3_bucket_object" "object" {
-  bucket = "aws_s3_bucket.bucket.id"
+  bucket = "projectbucket001"
   key    = "new_object_key"
-  source = "C:/Users/Tanmay Garge/Desktop/New folder (2)"
+  acl    = "private"
+  source = "C:/Users/Tanmay Garge/Desktop/New folder (2)/file.txt"
 }
