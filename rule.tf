@@ -1,35 +1,31 @@
-resource "aws_cloudwatch_event_rule" "s3eventrule" {
-  name                = "s3-event-rule"
-  event_pattern       = <<EOF
+resource "aws_cloudwatch_event_rule" "event_rule" {
+  name        = "s3_event_rule"
+  description = "Event rule for CSV file uploaded to S3 bucket"
+
+  event_pattern = <<EOF
 {
-  "source": ["aws.s3"],
   "detail": {
-    "eventName": ["PutObject"]
-  }
-  "object": {
+    "object": {
       "key":[
-      
-      {
-        "suffix": ".csv"
-      }]
+        {
+          "suffix": ".csv"
+        }
+      ]
     },
     "bucket": {
-      "name": ["${aws_s3_bucket.bucket.id}"]
+      "name": ["${aws_s3_bucket.s3_trigger_eventbridge.id}"]
     }
+  },
+  "detail-type": ["Object Created"],
+  "source": ["aws.s3"]
 }
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "event_target" {
-  rule      = aws_cloudwatch_event_rule.s3eventrule.name
-  target_id = "test_lambda"
+resource "aws_cloudwatch_event_target" "s3_event_target" {
+  rule      = aws_cloudwatch_event_rule.event_rule.name
+  target_id = "s3_event_target"
   arn       = aws_lambda_function.test_lambda.arn
-}
 
-resource "aws_lambda_permission" "lambdapermission" {
-  statement_id  = "AllowExecutionFromCloudWatch"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.test_lambda.function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.s3eventrule.arn
+  depends_on = [aws_cloudwatch_event_rule.event_rule]
 }
