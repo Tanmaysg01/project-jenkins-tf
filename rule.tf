@@ -1,22 +1,21 @@
 resource "aws_cloudwatch_event_rule" "s3eventrule" {
-  name        = "s3eventrule"
-  description = "Event rule for CSV file uploaded to S3 bucket"
-  event_pattern = <<EOF
+  name                = "s3-event-rule"
+  event_pattern       = <<EOF
 {
+  "source": ["aws.s3"],
   "detail": {
-    "object": {
-      "key": [
-        {
-          "suffix": ".csv"
-        }
-      ]
+    "eventName": ["PutObject"]
+  }
+  "object": {
+      "key":[
+      
+      {
+        "suffix": ".csv"
+      }]
     },
     "bucket": {
       "name": ["${aws_s3_bucket.bucket.id}"]
     }
-  },
-  "detail-type": ["Object Created"],
-  "source": ["aws.s3"]
 }
 EOF
 }
